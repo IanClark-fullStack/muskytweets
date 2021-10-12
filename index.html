@@ -10,6 +10,7 @@
         <title>Musky Tweets</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src=" https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
         <link href="assets/css/tailwind.css" rel="stylesheet">
     </head>
     <body>
@@ -26,9 +27,7 @@
                 <figure class="flex flex-grow" id="tweetFigure">
 
                 </figure>
-                <figure class="flex flex-grow" id="stockFigure">
-
-                </figure>
+                <canvas class="flex flex-grow" id="stockFigure"></canvas>
 
             </div>
         </section>
@@ -39,5 +38,6 @@
 
         
         <script src="" async defer></script>
+        <script src="script.js"></script>
     </body>
 </html>
