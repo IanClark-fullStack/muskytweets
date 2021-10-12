@@ -1,0 +1,23 @@
+{
+  "name": "muskytweets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwind build src/tw-style.css -o public/assets/css/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IanClark-fullStack/muskytweets.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IanClark-fullStack/muskytweets/issues"
+  },
+  "homepage": "https://github.com/IanClark-fullStack/muskytweets#readme",
+  "dependencies": {
+    "tailwindcss": "^2.2.16"
+  }
+}
