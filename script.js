@@ -1,3 +1,82 @@
+var pastTime;
+// get more refined searches when company's ticker is searched
+// var company;
+// var newsType;
+// fetch call function from inputs 
+// var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
+// fetchNews grabs news for specific search
+var $form = $("#form")
+
+function fetchNews(event) {
+    event.preventDefault()
+    var newsFeed = []
+    var newsType = "everything"
+    var company = $("#searchBar").val()
+    var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
+    fetch(newsAPIURL)
+    .then (function(response) {
+        return response.json()
+    })
+    // function to loop through data and pull information
+    .then(function(data) {
+        console.log(data)
+        var newsArticles = data.articles
+        console.log(newsArticles)
+        for (var i = 0; i < newsArticles.length; i++) {
+            var title = {}
+            title.articleTitle = newsArticles[i].title
+            title.articleDate = newsArticles[i].publishedAt
+            title.articleDescription = newsArticles[i].description
+            title.articleAuthor = newsArticles[i].author
+            title.articleURL = newsArticles[i].url
+            newsFeed.push(title)
+        }
+        console.log(newsFeed)
+
+    })
+}
+$form.on("submit", fetchNews)
+
+
+
+var stockAPIURL= 'https://www.alphavantage.co/query?apikey=KUCB9G0KGR5RT892&function=TIME_SERIES_INTRADAY&symbol=' + company + '&interval=60min&outputsize=full'
+
+var stockOpenDate = []
+var stockClose = []
+
+function fetchStocks() {
+    fetch(stockAPIURL)
+    .then (function(response) {
+        return response.json()
+    })
+    .then (function(data) {
+        console.log(data['Time Series (60min)'])
+        var stockData = []
+        for (var keys in data['Time Series (60min)']) {
+            data['Time Series (60min)'][keys].time = keys
+            stockData.push(data['Time Series (60min)'][keys])
+        }
+        console.log(stockData)
+
+        for (var i = 15; i < 352; i += 16) {
+            var stock = {}
+            stock.stockOpen = stockData[i]['1. open']
+            stock.stockDate = stockData[i]['time']
+            stockOpenDate.push(stock)
+        }
+        for (var i = 0; i < 352; i += 16) {
+            var stock2 ={}
+            stock2.stockClose = stockData[i]['4. close']
+            stock2.stockDate = stockData[i]['time']
+            stockClose.push(stock2)
+        }
+        console.log(stockOpenDate)
+        console.log(stockClose)
+    })
+}
+
+fetchStocks()
+
 const labels = [
     '9AM',
     '10AM',
@@ -50,46 +129,3 @@ var stockFigure = new Chart(
 stockFigure.canvas.parentNode.style.height = '1000px';
 stockFigure.canvas.parentNode.style.width = '1000px';
 // change the sizing using this 
-
-
-
-
-var pastTime;
-// get more refined searches when company's ticker is searched
-// var company;
-// var newsType;
-// fetch call function from inputs 
-// var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
-// fetchNews grabs news for specific search
-var $form = $("#form")
-
-function fetchNews(event) {
-    event.preventDefault()
-    var newsFeed = []
-    var newsType = "everything"
-    var company = $("#searchBar").val()
-    var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
-    fetch(newsAPIURL)
-    .then (function(response) {
-        return response.json()
-    })
-    // function to loop through data and pull information
-    .then(function(data) {
-        console.log(data)
-        var newsArticles = data.articles
-        console.log(newsArticles)
-        for (var i = 0; i < newsArticles.length; i++) {
-            var title = {}
-            title.articleTitle = newsArticles[i].title
-            title.articleDate = newsArticles[i].publishedAt
-            title.articleDescription = newsArticles[i].description
-            title.articleAuthor = newsArticles[i].author
-            title.articleURL = newsArticles[i].url
-            newsFeed.push(title)
-        }
-        console.log(newsFeed)
-
-    })
-}
-$form.on("submit", fetchNews)
-
