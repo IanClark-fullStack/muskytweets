@@ -38,6 +38,44 @@ function fetchNews(event) {
     })
 }
 
+function fetchStocks() {
+    var company = $('#searchBar').val()
+    var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
+
+    console.log(company)
+
+    console.log (stockAPIURL)
+    fetch(stockAPIURL)
+    .then (function(response) {
+        return response.json()
+    })
+    .then (function(data) {
+        var stockData = []
+        console.log(data)
+        for (var keys in data['Time Series (60min)']) {
+            data['Time Series (60min)'][keys].time = keys
+            stockData.push(data['Time Series (60min)'][keys])
+        }
+
+        for (var i = 15; i < 352; i += 16) {
+            var stock = {}
+            stock.stockOpen = stockData[i]['1. open']
+            stock.stockDate = stockData[i]['time']
+            stockOpenDate.push(stock)
+        }
+        for (var i = 0; i < 352; i += 16) {
+            var stock2 ={}
+            stock2.stockClose = stockData[i]['4. close']
+            stock2.stockDate = stockData[i]['time']
+            stockClose.push(stock2)
+        }
+        console.log(stockOpenDate)
+        console.log(stockClose)
+    }).catch(function(error) {
+        console.log(error)
+    })
+}
+
 var companySearches = []
 function searchNews() {
     var company = $("#searchBar").val()
@@ -58,45 +96,9 @@ function searchNews() {
     }
 }
 
-
-$form.on("submit", fetchNews)
-
-
 var stockOpenDate = []
 var stockClose = []
 
-function fetchStocks() {
-    var company = $('#searchBar').val()
-    var stockAPIURL= `https://www.alphavantage.co/query?apikey=KUCB9G0KGR5RT892&function=TIME_SERIES_INTRADAY&symbol=${company}&interval=60min&outputsize=full`
-    fetch(stockAPIURL)
-    .then (function(response) {
-        return response.json()
-    })
-    .then (function(data) {
-        var stockData = []
-        for (var keys in data['Time Series (60min)']) {
-            data['Time Series (60min)'][keys].time = keys
-            stockData.push(data['Time Series (60min)'][keys])
-        }
-
-        for (var i = 15; i < 352; i += 16) {
-            var stock = {}
-            stock.stockOpen = stockData[i]['1. open']
-            stock.stockDate = stockData[i]['time']
-            stockOpenDate.push(stock)
-        }
-        for (var i = 0; i < 352; i += 16) {
-            var stock2 ={}
-            stock2.stockClose = stockData[i]['4. close']
-            stock2.stockDate = stockData[i]['time']
-            stockClose.push(stock2)
-        }
-        console.log(stockOpenDate)
-        console.log(stockClose)
-    })
-}
-
-$form.on("submit", fetchStocks)
 
 const labels = [
     
@@ -111,11 +113,10 @@ for ( var i = 30; i > 0; i--) {
     labels.push(future)
     }
 
-
 const data = {
     labels: labels,
     datasets: [{
-    label: '*Stock Name* + *Date*',
+    label: 'S&P 500',
     // if we want to change the title of the chart/line. Most likely take the data from fetch call and insert the stock name and the date taken from api data.
     backgroundColor: 'rgb(255, 99, 132)',
     borderColor: 'rgb(255, 99, 132)',
@@ -146,3 +147,6 @@ var stockFigure = new Chart(
     document.getElementById('stockFigure'),
     config
 );
+
+$form.on("submit", fetchStocks)
+$form.on("submit", fetchNews)
