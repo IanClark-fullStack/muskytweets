@@ -10,26 +10,85 @@
         <title>Musky Tweets</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src=" https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
         <link href="assets/css/tailwind.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+        <script src=" https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
     </head>
-    <body>
+    <body class="bg-gray-900">
         <header class="container mx-auto px-4">
-            <h1 class="font-sans text-lg md:text-5xl">Musky Tweets</h1>
-            <div class="flex space-x-4">
-                <a href="#">Search</a>
-                <a href="#">Search</a>
+            <div class="grid grid-rows-3 grid-cols-3 gap-3">
+                <div class="row-span-2 col-span-2">
+                    <h1 class="col-span-2 text-gray-50 font-sans text-lg md:text-5xl">New News Stock</h1>
+                </div>
+                <div class="col-span-1"><p>Hamburger Menu</p></div>
+            </div>
+            <div class="grid grid-cols-12">
+                <div class="col-start-1 col-end-4 px-4 py-1 border-2 border-gray-400 rounded relative max-h-12">
+                    <label class="absolute -my-5 -mx-3 bg-gray-900 px-3 text-gray-400">Search</label>
+                    <input type="text" class="appearance-none bg-gray-900 border-2 border-gray-900 placeholder-gray-100 placeholder-opacity-80 rounded w-full py-2 leading-tight focus:outline-none focus:bg-gray-900 focus:placeholder-opacity-50 focus:border-gray-900 focus:text-gray-100" placeholder="Stock Name">
+                    
+                </div>
+                <button class="gap-x-0 place-items-center inline">
+                    <i class="far fa-arrow-alt-circle-right text-xl text-gray-400"></i>
+                </button>
+                
+                <div class="col-start-5 col-end-8 px-4 py-1 border-2 border-gray-400 rounded relative max-h-12">
+                    <label class="absolute -my-5 -mx-3 bg-gray-900 px-3 text-gray-400">Stock</label>
+                    <input type="text" class="appearance-none bg-gray-900 border-2 border-gray-900 placeholder-gray-100 placeholder-opacity-80 rounded w-full py-2 leading-tight focus:outline-none focus:bg-gray-900 focus:placeholder-opacity-50 focus:border-gray-900 focus:text-gray-100" placeholder="s&p500">
+                </div>
+                <button class="gap-x-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" classname="h-6 w-6" fill="none" viewBox="0 0 44 44" stroke="currentColor" class="text-gray-400">
+                        <path strokelinecap="round" strokelinejoin="round" strokewidth="{2}" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </button>
+                <!-- <input class="col-span-2 gap-x-0"></input>
+                <button class="gap-x-0"><a href="#">Search</a></button> -->
+                <!-- <input class="col-span-2 gap-x-0"></input>
+                <button class="col-span-1 gap-x-0"><a href="#">Search</a></button> -->
             </div>
         </header>
 
-        <section class="container mx-auto p-5">
+        <section class="container mx-auto p-5 max-w-4xl">
+            <form class="w-1/3 my-5">
+                <fieldset class="px-4 py-1 border-2 border-green-400 rounded relative">
+                    <label for="Current-Stock" class="absolute -my-5 -mx-3 bg-gray-900 px-3 text-gray-400">Populate by Search Input</label>
+                        <select name="stock-options" id="stock-options" class="appearance-none bg-gray-900 w-full py-2 leading-tight focus:outline-none text-gray-300">
+                            <option disabled="" selected=""><i class="fas fa-arrow-circle-down"></i>Compare Stocks</option>
+                            <option>Populate</option>
+                            <option>From</option>
+                            <option>Local</option>
+                            <option>Storage</option>
+                            <option>Array</option>
+                        </select>
+                </fieldset>
+            </form>
             <div class="flex flex-col md:flex-row"> 
-                <figure class="flex flex-grow" id="tweetFigure">
+                <figure class="flex flex-grow" id="newsFigure">
 
                 </figure>
-                <canvas class="flex flex-grow" id="stockFigure"></canvas>
+                
+  
+                <figure class="flex flex-grow" id="tweetFigure">
+                    <canvas class="flex flex-grow" id="stockFigure"></canvas>
+                </figure>
+                </div>
+                <div class="flex flex-row">
+                <form class="flex flex-col w-1/3 my-5" id="time-choice">
+                    <fieldset class="px-4 py-1 border-b-2 border-green-400">
+                            <select name="stock-options" id="stock-options" class="appearance-none bg-gray-900 w-full leading-tight focus:outline-none text-gray-300">
+                                <option disabled="" selected=""><i class="fas fa-arrow-circle-down"></i>Last Week</option>
+                                <option>Last Month</option>
+                                <option>Last Day</option>
+                                <option>Local</option>
+                                <option>Storage</option>
+                                <option>Array</option>
+                            </select>
+                    </fieldset>
+                </form>
+                <h5 class="flex flex-col px-4 my-5 border-b-2 border-red-400 text-red-400">(-)decrease</h5>
+                <h5 class="flex flex-col px-4 my-5 border-b-2 border-green-200 text-green-200">(+)increase</h5>
+                </div>
 
-            </div>
         </section>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
@@ -39,5 +98,6 @@
         
         <script src="" async defer></script>
         <script src="script.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
     </body>
 </html>
