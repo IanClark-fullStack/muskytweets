@@ -68,6 +68,7 @@ function fetchNews(event) {
     var newsFeed = []
     var newsType = "everything"
     var company = $("#searchBar").val()
+    searchNews()
     var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
     fetch(newsAPIURL)
     .then (function(response) {
@@ -75,7 +76,6 @@ function fetchNews(event) {
     })
     // function to loop through data and pull information
     .then(function(data) {
-        console.log(data)
         var newsArticles = data.articles
         console.log(newsArticles)
         for (var i = 0; i < newsArticles.length; i++) {
@@ -87,9 +87,32 @@ function fetchNews(event) {
             title.articleURL = newsArticles[i].url
             newsFeed.push(title)
         }
+        localStorage.setItem("company", JSON.stringify(newsFeed))
         console.log(newsFeed)
 
     })
 }
+
+var companySearches = []
+function searchNews() {
+    var company = $("#searchBar").val()
+    company.trim()
+    var companyHistory = $("#stock-options")
+    if (company.length > 0 && companySearches.indexOf(company) === -1) {
+        companySearches.push(company)
+        localStorage.setItem("company", JSON.stringify(company))
+        companyHistory.append(
+            $("<option>")
+                .addClass()
+                .attr("class", "recentSearch")
+                .text(company)
+        )
+        $("#searchBar").val("")
+        console.log(companySearches)
+        console.log(company)
+    }
+}
+
+
 $form.on("submit", fetchNews)
 
