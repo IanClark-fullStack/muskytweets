@@ -26,6 +26,9 @@ function fetchNews(event) {
         for (var i = 0; i < newsArticles.length; i++) {
             var title = {}
             title.articleTitle = newsArticles[i].title
+            if (title.articleTitle.indexOf(company) !== -1) {
+                console.log(title.articleTitle);
+            }
             title.articleDate = newsArticles[i].publishedAt
             title.articleDescription = newsArticles[i].description
             title.articleAuthor = newsArticles[i].author
@@ -34,9 +37,12 @@ function fetchNews(event) {
         }
         localStorage.setItem("company", JSON.stringify(newsFeed))
         console.log(newsFeed)
+        
 
     })
 }
+
+
 
 var companySearches = []
 function searchNews() {
