@@ -51,17 +51,24 @@ stockFigure.canvas.parentNode.style.height = '1000px';
 stockFigure.canvas.parentNode.style.width = '1000px';
 // change the sizing using this 
 
-var presentTime;
+
+
+
 var pastTime;
 // get more refined searches when company's ticker is searched
-var company = "aapl"
-// $("input").val()
+// var company;
+// var newsType;
 // fetch call function from inputs 
-var newsAPIURL = `https://newsapi.org/v2/everything?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
-
+// var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
 // fetchNews grabs news for specific search
-var newsFeed = []
-function fetchNews() {
+var $form = $("#form")
+
+function fetchNews(event) {
+    event.preventDefault()
+    var newsFeed = []
+    var newsType = "everything"
+    var company = $("#searchBar").val()
+    var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
     fetch(newsAPIURL)
     .then (function(response) {
         return response.json()
@@ -84,6 +91,5 @@ function fetchNews() {
 
     })
 }
-
-fetchNews()
+$form.on("submit", fetchNews)
 

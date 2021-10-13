@@ -23,14 +23,14 @@
                 <div class="col-span-1"><p>Hamburger Menu</p></div>
             </div>
             <div class="grid grid-cols-12">
-                <div class="col-start-1 col-end-4 px-4 py-1 border-2 border-gray-400 rounded relative max-h-12">
+                <form id="form" class="col-start-1 col-end-4 px-4 py-1 border-2 border-gray-400 rounded relative max-h-12">
                     <label class="absolute -my-5 -mx-3 bg-gray-900 px-3 text-gray-400">Search</label>
-                    <input type="text" class="appearance-none bg-gray-900 border-2 border-gray-900 placeholder-gray-100 placeholder-opacity-80 rounded w-full py-2 leading-tight focus:outline-none focus:bg-gray-900 focus:placeholder-opacity-50 focus:border-gray-900 focus:text-gray-100" placeholder="Stock Name">
+                    <input id="searchBar" type="text" class="appearance-none bg-gray-900 border-2 border-gray-900 placeholder-gray-100 placeholder-opacity-80 rounded w-full py-2 leading-tight focus:outline-none focus:bg-gray-900 focus:placeholder-opacity-50 focus:border-gray-900 focus:text-gray-100" placeholder="Stock Name">
+                    <button type="submit" class="gap-x-0 place-items-center inline">
+                        <i class="far fa-arrow-alt-circle-right text-xl text-gray-400"></i>
+                    </button>
                     
-                </div>
-                <button class="gap-x-0 place-items-center inline">
-                    <i class="far fa-arrow-alt-circle-right text-xl text-gray-400"></i>
-                </button>
+                </form>
                 
                 <div class="col-start-5 col-end-8 px-4 py-1 border-2 border-gray-400 rounded relative max-h-12">
                     <label class="absolute -my-5 -mx-3 bg-gray-900 px-3 text-gray-400">Stock</label>
@@ -97,7 +97,8 @@
 
         
         <script src="" async defer></script>
-        <script src="script.js"></script>
         <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="script.js"></script>
     </body>
 </html>
