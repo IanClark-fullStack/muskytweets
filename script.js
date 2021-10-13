@@ -49,3 +49,31 @@ var stockFigure = new Chart(
 stockFigure.canvas.parentNode.style.height = '1000px';
 stockFigure.canvas.parentNode.style.width = '1000px';
 // change the sizing using this 
+
+var presentTime;
+var pastTime;
+// get more refined searches when company's ticker is searched
+var company = "aapl"
+// $("input").val()
+// fetch call function from inputs 
+var newsAPIURL = `https://newsapi.org/v2/everything?q=${company}&from=2021-9-12&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
+
+function fetchNews() {
+    fetch(newsAPIURL)
+    .then (function(response) {
+        return response.json()
+    })
+    .then(function(data) {
+        console.log(data)
+        var articleTitle = data.articles[0].title
+        console.log(articleTitle)
+        var articledescription = data.articles[0].description
+        console.log(articledescription)
+        var articleAuthor = data.articles[0].author
+        console.log(articleAuthor)
+        var articleurl = data.articles[0].url
+        console.log(articleurl)
+    })
+}
+
+fetchNews()
