@@ -42,6 +42,7 @@ function fetchNews(event) {
     })
 }
 
+<<<<<<< HEAD
 
 
 var companySearches = []
@@ -71,15 +72,22 @@ $form.on("submit", fetchNews)
 var stockOpenDate = []
 var stockClose = []
 
+=======
+>>>>>>> 6dd76c48c19143445436769ff6aa9eadbdf9a803
 function fetchStocks() {
     var company = $('#searchBar').val()
-    var stockAPIURL= `https://www.alphavantage.co/query?apikey=KUCB9G0KGR5RT892&function=TIME_SERIES_INTRADAY&symbol=${company}&interval=60min&outputsize=full`
+    var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
+
+    console.log(company)
+
+    console.log (stockAPIURL)
     fetch(stockAPIURL)
     .then (function(response) {
         return response.json()
     })
     .then (function(data) {
         var stockData = []
+        console.log(data)
         for (var keys in data['Time Series (60min)']) {
             data['Time Series (60min)'][keys].time = keys
             stockData.push(data['Time Series (60min)'][keys])
@@ -99,10 +107,34 @@ function fetchStocks() {
         }
         console.log(stockOpenDate)
         console.log(stockClose)
+    }).catch(function(error) {
+        console.log(error)
     })
 }
 
-$form.on("submit", fetchStocks)
+var companySearches = []
+function searchNews() {
+    var company = $("#searchBar").val()
+    company.trim()
+    var companyHistory = $("#stock-options")
+    if (company.length > 0 && companySearches.indexOf(company) === -1) {
+        companySearches.push(company)
+        localStorage.setItem("company", JSON.stringify(company))
+        companyHistory.append(
+            $("<option>")
+                .addClass()
+                .attr("class", "recentSearch")
+                .text(company)
+        )
+        $("#searchBar").val("")
+        console.log(companySearches)
+        console.log(company)
+    }
+}
+
+var stockOpenDate = []
+var stockClose = []
+
 
 const labels = [
     
@@ -117,11 +149,10 @@ for ( var i = 30; i > 0; i--) {
     labels.push(future)
     }
 
-
 const data = {
     labels: labels,
     datasets: [{
-    label: '*Stock Name* + *Date*',
+    label: 'S&P 500',
     // if we want to change the title of the chart/line. Most likely take the data from fetch call and insert the stock name and the date taken from api data.
     backgroundColor: 'rgb(255, 99, 132)',
     borderColor: 'rgb(255, 99, 132)',
@@ -152,3 +183,6 @@ var stockFigure = new Chart(
     document.getElementById('stockFigure'),
     config
 );
+
+$form.on("submit", fetchStocks)
+$form.on("submit", fetchNews)
