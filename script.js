@@ -47,8 +47,6 @@ var stockFigure = new Chart(
 );
 
 
-stockFigure.canvas.parentNode.style.height = '1000px';
-stockFigure.canvas.parentNode.style.width = '1000px';
 // change the sizing using this 
 
 
