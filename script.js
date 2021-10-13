@@ -38,25 +38,22 @@ function fetchNews(event) {
 $form.on("submit", fetchNews)
 
 
-
-var stockAPIURL= 'https://www.alphavantage.co/query?apikey=KUCB9G0KGR5RT892&function=TIME_SERIES_INTRADAY&symbol=' + company + '&interval=60min&outputsize=full'
-
 var stockOpenDate = []
 var stockClose = []
 
 function fetchStocks() {
+    var company = $('#searchBar').val()
+    var stockAPIURL= `https://www.alphavantage.co/query?apikey=KUCB9G0KGR5RT892&function=TIME_SERIES_INTRADAY&symbol=${company}&interval=60min&outputsize=full`
     fetch(stockAPIURL)
     .then (function(response) {
         return response.json()
     })
     .then (function(data) {
-        console.log(data['Time Series (60min)'])
         var stockData = []
         for (var keys in data['Time Series (60min)']) {
             data['Time Series (60min)'][keys].time = keys
             stockData.push(data['Time Series (60min)'][keys])
         }
-        console.log(stockData)
 
         for (var i = 15; i < 352; i += 16) {
             var stock = {}
@@ -75,21 +72,22 @@ function fetchStocks() {
     })
 }
 
-fetchStocks()
+$form.on("submit", fetchStocks)
 
 const labels = [
-    '9AM',
-    '10AM',
-    '11AM',
-    '12PM',
-    '1PM',
-    '2PM',
-    '3PM',
-    '4PM',
-    '5pm',
-    '6pm',
+    
     // If we want to change the values of the x-axis
 ];
+
+var dates = future
+for ( var i = 30; i > 0; i--) {
+    var future = new Date();
+    future.setDate(future.getDate() - i)
+    console.log(future)
+    labels.push(future)
+    }
+
+
 const data = {
     labels: labels,
     datasets: [{
@@ -97,7 +95,7 @@ const data = {
     // if we want to change the title of the chart/line. Most likely take the data from fetch call and insert the stock name and the date taken from api data.
     backgroundColor: 'rgb(255, 99, 132)',
     borderColor: 'rgb(255, 99, 132)',
-    data: [802.61, 809.51, 809.10, 803.11, 808.68, 804.48, 806.00, 807.67, 805.60],
+    data: [802.61, 809.51, 809.10, 803.11, 808.68, 804.48, 806.00, 807.67, 805.60, 805, 809, 815, 820, 800, 801, 804, 810, 815, 804, 813, 800, 810, 829, 810, 819, 817, 822, 823, 840, 800],
     // data values are not true, need to change to reflect the values given by stock api. grab the values for the day and insert it into the array.
     // y-axis will reflect to show a range starting a little below the first value and ending a little above the highest value
     }]
@@ -124,7 +122,6 @@ var stockFigure = new Chart(
     document.getElementById('stockFigure'),
     config
 );
-
 
 // change the sizing using this 
 
