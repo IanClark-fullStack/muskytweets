@@ -1,10 +1,11 @@
+$(document).ready(function() {
 
-var pastTime;
+// var pastTime;
 var $form = $("#form")
 var company = $("#searchBar").val()
 var newsType = "everything"
 var today = new Date();
-var lastMonth = yyyy+"-"+mm-1+"-"+dd;
+// var lastMonth = yyyy+"-"+mm-1+"-"+dd;
 var dd = today.getDate();
 var mm = today.getMonth()+1;
 var yyyy = today.getFullYear();
@@ -15,22 +16,22 @@ var stockClose = []
 
 
 
-function fetchNews(event) {
-    event.preventDefault()
+function fetchNews(companyname) {
     // Create ISO Time 
     if(dd<10) {dd='0'+dd;}
     if (mm<10){mm='0'+mm;}
     today=yyyy+"-"+mm+"-"+dd+"-";
     // newsType = "everything"
     company = $("#searchBar").val()
-    populateNews(company)
+
+    populateNews(companyname)
 }
 function populateNews(company) {
     var newsFeed = []
     $('#news-container').empty()
-     searchNews()
+    searchNews()
 
-    var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=${today}&to=${lastMonth}&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
+    var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=${today}&to=${`${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`}&sortBy=popularity&apiKey=14abb4c1b5de4b2e974aea79db9937e5`
     console.log(newsAPIURL)
     fetch(newsAPIURL)
     .then (function(response) {
@@ -38,10 +39,8 @@ function populateNews(company) {
     })
     // function to loop through data and pull information
     .then(function(data) {
-        console.log(data)
         var newsArticles = data.articles
-        console.log(newsArticles)
-        for (var i = 0; i < newsArticles.length; i++) {
+        for (let i = 0; i < newsArticles.length; i++) {
             var title = {}
             title.articleTitle = newsArticles[i].title
             if (title.articleTitle.includes(company)) {
@@ -62,8 +61,7 @@ function populateNews(company) {
             newNewsArticle.append(newsTitle);
 
         }
-        localStorage.setItem("company", JSON.stringify(newsFeed))
-        console.log(newsFeed)
+        // localStorage.setItem("company", JSON.stringify(newsFeed))
     })
 }
 
@@ -72,7 +70,7 @@ var lowest = 0;
 var stockOpen = []
 var stockClose = []
 
-function fetchStocks() {
+function fetchStocks(companyname) {
     var company = $('#searchBar').val()
     var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
     console.log(stockAPIURL)
@@ -84,23 +82,24 @@ function fetchStocks() {
     })
     .then (function(data) {
         var stockData = []
-        for (var keys in data['Time Series (60min)']) {
-            data['Time Series (60min)'][keys].time = keys
-            stockData.push(data['Time Series (60min)'][keys])
+        for (var keys in data["Time Series (60min)"]) {
+            data["Time Series (60min)"][keys].time = keys
+            stockData.push(data["Time Series (60min)"][keys])
         }
 
-        for (var i = 15; i < 352; i += 16) {
+        for (let i = 15; i < 352; i += 16) {
             var stock = {}
-            stock.stockOpen = stockData[i]['1. open']
+
+            stock.stockOpen = stockData[i]["1. open"]
 
             stock.stockDate = stockData[i]['time']
 
 
             stockOpen.push(stock)
         }
-        for (var i = 0; i < 352; i += 16) {
+        for (let i = 0; i < 352; i += 16) {
             var stock2 ={}
-            stock2.stockClose = stockData[i]['4. close']
+            stock2.stockClose = stockData[i]["4. close"]
             stockClose.push(stock2)
         }
 
@@ -108,7 +107,7 @@ function fetchStocks() {
          // Loop Created to Obtain the Highest and Lowest Values of Stock Close
         var stockValley = stockClose[0].stockClose;
         var stockPeak = stockClose[0].stockClose;
-        for (var i=0; i<stockClose.length; i++) {
+        for (let i=0; i<stockClose.length; i++) {
             var startVal = stockClose[i].stockClose;
             if (startVal > stockPeak) {
                 stockPeak = startVal; 
@@ -134,21 +133,21 @@ function fetchStocks() {
 }
 
 var companySearches = []
+var companyHistory = $("#stock-options")
 function searchNews() {
     company = $("#searchBar").val()
     company.trim()
-    var companyHistory = $("#stock-options")
     if (company.length > 0 && companySearches.indexOf(company) === -1) {
         companySearches.push(company)
-        localStorage.setItem("company", JSON.stringify(company))
+        localStorage.setItem("company", JSON.stringify(companySearches))
         companyHistory.append(
             $("<option>")
                 .addClass()
                 .attr("class", "recentSearch")
                 .text(company)
         )
-        // console.log(companySearches)
-        // console.log(company)
+
+
     }
 }
 
@@ -190,7 +189,7 @@ for ( var i = 30; i > 0; i--) {
 excludeDays();    
 
 var dates = future
-for ( var i = 22; i > 0; i--) {
+for ( let i = 22; i > 0; i--) {
     var future = new Date();
     future.setDate(future.getDate() - i)
     labels.push(future.toLocaleDateString())
@@ -243,7 +242,7 @@ const config = {
 
 function changeData(openValue) {
     stockFigure.data.datasets[0].data = [];
-    for (var i = 0; i < openValue.length; i++) {
+    for (let i = 0; i < openValue.length; i++) {
     stockFigure.data.datasets[0].data.push(openValue[i].stockOpen)
     }
 stockFigure.update();   
@@ -255,16 +254,39 @@ var stockFigure = new Chart(
 );
 
 function init() {
-    company = "tsla"
-    newsType = "top_headlines"
-    // adjust parameters before function call
-    populateNews(company)
-    // fetchStock with the company part set to SPY
-    // localStorage.get to pull recent searches and put them as options
+    var savedChar = JSON.parse(localStorage.getItem("company")) || []
+    if (savedChar) {
+        for (var i = 0; i < savedChar.length; i++)
+            companyHistory.append(
+                $("<option>")
+                    .addClass()
+                    .attr("class", "recentSearch")
+                    .text(savedChar[i])
+            )
+    }
 }
+
+
+init()
+$form.on("submit", function(event) {
+    event.preventDefault();
+    fetchStocks($("#searchBar").val())
+    fetchNews($("#searchBar").val())
+})
+
+// on click change back to recent search
+$("#stock-options").on("change", function (event) {
+    var company = $("#stock-options").val()
+    console.log(company)
+    fetchNews(company)
+    fetchStocks(company)
+})
+
+})
 
 
 // init()
 
 $form.on("submit", fetchStocks)
 $form.on("submit", fetchNews)
+
