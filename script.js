@@ -24,12 +24,6 @@ function populateNews(company) {
     $('#news-container').empty()
      searchNews()
 
-    var newsType = "everything"
-    var company = $("#searchBar").val()
-    companyVar += company;
-  
-    searchNews()
-
     var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=${today}&to=${lastMonth}&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
     console.log(newsAPIURL)
     fetch(newsAPIURL)
@@ -114,6 +108,11 @@ function fetchStocks() {
                 lowest += stockValley;
             }
         }
+        var setPeak = $('#peak');
+        setPeak.text(stockPeak);
+        var setValley = $('#valley');
+        setValley.text(stockValley);
+        
         console.log(stockOpenDate)
         console.log(stockClose)
     }).catch(function(error) {
