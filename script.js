@@ -71,6 +71,9 @@ var stockClose = []
 function fetchStocks() {
     var company = $('#searchBar').val()
     var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
+    console.log(stockAPIURL)
+    stockOpen = []
+    stockClose = []
     fetch(stockAPIURL)
     .then (function(response) {
         return response.json()
