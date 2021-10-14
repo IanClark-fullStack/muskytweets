@@ -112,7 +112,8 @@ function fetchStocks() {
         setPeak.text(stockPeak);
         var setValley = $('#valley');
         setValley.text(stockValley);
-        
+        var companyTitle = $('#companyHeading');
+        companyTitle.text(`${company}`);
         console.log(stockOpenDate)
         console.log(stockClose)
     }).catch(function(error) {
@@ -183,12 +184,20 @@ const config = {
             tooltip: {
                 callbacks: {
                     afterBody: function() {
-                        for (var i=0; i<stockOpenDate.length; i++) {
-                            var open = stockOpenDate[i];
-                            var close = stockClose[i];
-                            console.log(open);
-                            return `open: ${open.stockOpen} close: ${close.stockClose}`;
-                        }
+                        stockOpenDate.forEach((element) => {
+
+                               
+
+                                return `open: ${element} close:`;
+
+
+
+
+                            })
+                        
+                       
+                        
+                        
                         // if we want to add any text to the tooltips enter here or we can delete if nothing needs to be added.
                     }
                     
