@@ -7,12 +7,13 @@ var pastTime;
 // var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
 // fetchNews grabs news for specific search
 var $form = $("#form")
-
+var company = $("#searchBar")
+var newsType = "everything"
 function fetchNews(event) {
     event.preventDefault()
     var newsFeed = []
-    var newsType = "everything"
-    var company = $("#searchBar").val()
+    // var newsType = "everything"
+    // var company = $("#searchBar").val()
     searchNews()
     var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
     fetch(newsAPIURL)
@@ -39,7 +40,7 @@ function fetchNews(event) {
 }
 
 function fetchStocks() {
-    var company = $('#searchBar').val()
+    // var company = $('#searchBar').val()
     var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
 
     console.log(company)
@@ -78,7 +79,7 @@ function fetchStocks() {
 
 var companySearches = []
 function searchNews() {
-    var company = $("#searchBar").val()
+    // var company = $("#searchBar").val()
     company.trim()
     var companyHistory = $("#stock-options")
     if (company.length > 0 && companySearches.indexOf(company) === -1) {
