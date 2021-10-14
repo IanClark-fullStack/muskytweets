@@ -181,7 +181,6 @@ for ( var i = 30; i > 0; i--) {
             // }
         }
     }
-  
 excludeDays();    
 
 const data = {
@@ -208,35 +207,18 @@ const config = {
             tooltip: {
                 callbacks: {
                     afterBody: function() {
-                        stockOpen.forEach((element) => {
+                                return `open:`;
 
-                               
-
-                                return `open: ${element} close:`;
-
-
-
-
-                            })
-                        
-                       
-                        
-                        
                         // if we want to add any text to the tooltips enter here or we can delete if nothing needs to be added.
-                    }
                     
+                    
+                    }
                 }
             }
         }
     }
-};
-var open;
-var populateData = function() {
-    for (var i=0; i<stockOpen.length; i++) {
-        open = stockOpen[i].stockOpen;
-        return open;
-    }
 }
+
 var stockFigure = new Chart(
     document.getElementById('stockFigure'),
     config
