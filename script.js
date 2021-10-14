@@ -188,7 +188,7 @@ const config = {
                         for (var i=0; i<stockOpen.length; i++) {
                             var open = stockOpen[i];
                             var close = stockClose[i];
-                           
+                            console.log(open);
                             return `open: ${open.stockOpen} close: ${close.stockClose}`;
                         }
                         // if we want to add any text to the tooltips enter here or we can delete if nothing needs to be added.
