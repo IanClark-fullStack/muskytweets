@@ -23,6 +23,13 @@ function populateNews(company) {
     var newsFeed = []
     $('#news-container').empty()
      searchNews()
+
+    var newsType = "everything"
+    var company = $("#searchBar").val()
+    companyVar += company;
+  
+    searchNews()
+
     var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=${today}&to=${lastMonth}&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
     console.log(newsAPIURL)
     fetch(newsAPIURL)
@@ -57,12 +64,16 @@ function populateNews(company) {
     })
 }
 
+var highest = 0;
+var lowest = 0;
 
 function fetchStocks() {
     company = $('#searchBar').val()
     var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
 
+
     // console.log(company)
+
 
     // console.log (stockAPIURL)
     fetch(stockAPIURL)
@@ -89,7 +100,20 @@ function fetchStocks() {
             stock2.stockDate = stockData[i]['time']
             stockClose.push(stock2)
         }
-        
+         // Loop Created to Obtain the Highest and Lowest Values of Stock Close
+        var stockValley = stockClose[0].stockClose;
+        var stockPeak = stockClose[0].stockClose;
+        for (var i=0; i<stockClose.length; i++) {
+            var startVal = stockClose[i].stockClose;
+            if (startVal > stockPeak) {
+                stockPeak = startVal; 
+                highest += stockPeak; 
+            }
+            if (startVal < stockValley) {
+                stockValley = startVal;
+                lowest += stockValley;
+            }
+        }
         console.log(stockOpenDate)
         console.log(stockClose)
     }).catch(function(error) {
@@ -139,7 +163,7 @@ for ( var i = 30; i > 0; i--) {
 const data = {
     labels: labels,
     datasets: [{
-    label: 'S&P 500',
+    label: 'Stock',
     // if we want to change the title of the chart/line. Most likely take the data from fetch call and insert the stock name and the date taken from api data.
     backgroundColor: 'rgb(255, 99, 132)',
     borderColor: 'rgb(255, 99, 132)',
@@ -151,6 +175,7 @@ const data = {
 };
 // console.log(data);
 
+
 const config = {
     type: 'line',
     data: data,
@@ -160,9 +185,10 @@ const config = {
                 callbacks: {
                     afterBody: function() {
                         for (var i=0; i<stockOpenDate.length; i++) {
-                            open = stockOpenDate[i];
-                            close = stockClose[i];
-                            return `$open: ${open.stockOpen} close: ${close.stockClose}`;
+                            var open = stockOpenDate[i];
+                            var close = stockClose[i];
+                           
+                            return `open: ${open.stockOpen} close: ${close.stockClose}`;
                         }
                         // if we want to add any text to the tooltips enter here or we can delete if nothing needs to be added.
                     }
