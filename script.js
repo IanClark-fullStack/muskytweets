@@ -9,6 +9,10 @@ var today = new Date();
 var dd = today.getDate();
 var mm = today.getMonth()+1;
 var yyyy = today.getFullYear();
+var stockOpen = []
+var stockClose = []
+
+
 
 
 
@@ -69,6 +73,9 @@ var stockClose = []
 function fetchStocks(companyname) {
     var company = $('#searchBar').val()
     var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
+    console.log(stockAPIURL)
+    stockOpen = []
+    stockClose = []
     fetch(stockAPIURL)
     .then (function(response) {
         return response.json()
@@ -82,7 +89,12 @@ function fetchStocks(companyname) {
 
         for (let i = 15; i < 352; i += 16) {
             var stock = {}
+
             stock.stockOpen = stockData[i]["1. open"]
+
+            stock.stockDate = stockData[i]['time']
+
+
             stockOpen.push(stock)
         }
         for (let i = 0; i < 352; i += 16) {
@@ -110,7 +122,10 @@ function fetchStocks(companyname) {
         setPeak.text(stockPeak);
         var setValley = $('#valley');
         setValley.text(stockValley);
-        
+
+        var companyTitle = $('#companyHeading');
+        companyTitle.text(`${company}`);
+
         console.log(stockOpen)
         console.log(stockClose)
         $("#searchBar").val("")
@@ -136,8 +151,42 @@ function searchNews() {
     }
 }
 
+
+
 const labels = [
 ];
+
+
+const oldArray = [];
+
+for ( var i = 30; i > 0; i--) {
+    var future = new Date();
+    future.setDate(future.getDate() - i)
+    oldArray.push(future.toLocaleDateString())
+    }
+    var weekendDay = [];
+    function excludeDays() {
+        // var dates = future
+        for (var i=0; i<oldArray.length; i++) {
+           var day = oldArray[i];
+            var dt = new Date(day);
+        
+           if (dt.getDay() == 0 || dt.getDay() == 6) {
+               weekendDay.push(day);
+           }
+           else {
+           labels.push(day);
+           }
+            console.log(labels);
+            
+            // future.setDate(future.getDate() - i)
+            // console.log(future)
+            // if (future.getDay() == 0 || future.getDay() == 6) {
+            //     labels.push(future.toLocaleDateString())
+            // }
+        }
+    }
+excludeDays();    
 
 var dates = future
 for ( let i = 22; i > 0; i--) {
@@ -145,6 +194,7 @@ for ( let i = 22; i > 0; i--) {
     future.setDate(future.getDate() - i)
     labels.push(future.toLocaleDateString())
     }
+
 
 const data = {
     labels: labels,
@@ -168,6 +218,13 @@ const config = {
             tooltip: {
                 callbacks: {
                     afterBody: function() {
+
+                                return `open:`;
+
+                        // if we want to add any text to the tooltips enter here or we can delete if nothing needs to be added.
+                    
+                    
+
                         for (var i=0; i<stockOpen.length; i++) {
                             var open = stockOpen[i];
                             var close = stockClose[i];
@@ -175,12 +232,13 @@ const config = {
                             return `open: ${open.stockOpen} close: ${close.stockClose}`;
                         }
                         // if we want to add any text to the tooltips enter here or we can delete if nothing needs to be added.
+
                     }
                 }
             }
         }
     }
-};
+}
 
 function changeData(openValue) {
     stockFigure.data.datasets[0].data = [];
@@ -208,6 +266,7 @@ function init() {
     }
 }
 
+
 init()
 $form.on("submit", function(event) {
     event.preventDefault();
@@ -224,3 +283,10 @@ $("#stock-options").on("change", function (event) {
 })
 
 })
+
+
+// init()
+
+$form.on("submit", fetchStocks)
+$form.on("submit", fetchNews)
+
