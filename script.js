@@ -7,8 +7,7 @@ var pastTime;
 // var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
 // fetchNews grabs news for specific search
 var $form = $("#form")
-
-
+var companyVar = "";
 function fetchNews(event) {
     event.preventDefault()
     // Create ISO Time 
@@ -23,6 +22,7 @@ function fetchNews(event) {
     var newsFeed = []
     var newsType = "everything"
     var company = $("#searchBar").val()
+    companyVar += company;
     console.log(company);
     searchNews()
     var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=${today}&to=${lastMonth}&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
@@ -88,12 +88,14 @@ function fetchStocks() {
             stock2.stockDate = stockData[i]['time']
             stockClose.push(stock2)
         }
+        
         console.log(stockOpenDate)
         console.log(stockClose)
     }).catch(function(error) {
         console.log(error)
     })
 }
+
 
 var companySearches = []
 function searchNews() {
@@ -131,6 +133,7 @@ for ( var i = 30; i > 0; i--) {
     console.log(future)
     labels.push(future.toLocaleDateString())
     }
+    
 
 const data = {
     labels: labels,
@@ -145,6 +148,7 @@ const data = {
     // y-axis will reflect to show a range starting a little below the first value and ending a little above the highest value
     }]
 };
+console.log(data);
 
 const config = {
     type: 'line',
@@ -154,9 +158,14 @@ const config = {
             tooltip: {
                 callbacks: {
                     afterBody: function() {
-                        return 'Hi';
+                        for (var i=0; i<stockOpenDate.length; i++) {
+                            open = stockOpenDate[i];
+                            close = stockClose[i];
+                            return `$open: ${open.stockOpen} close: ${close.stockClose}`;
+                        }
                         // if we want to add any text to the tooltips enter here or we can delete if nothing needs to be added.
                     }
+                    
                 }
             }
         }
