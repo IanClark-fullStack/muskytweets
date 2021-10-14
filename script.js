@@ -9,6 +9,8 @@ var dd = today.getDate();
 var mm = today.getMonth()+1;
 var yyyy = today.getFullYear();
 
+
+
 function fetchNews(event) {
     event.preventDefault()
     // Create ISO Time 
@@ -63,27 +65,18 @@ function populateNews(company) {
 
 var highest = 0;
 var lowest = 0;
+var stockOpen = []
+var stockClose = []
 
 function fetchStocks() {
-    var stockOpen = []
-    var stockClose = []
     var company = $('#searchBar').val()
     var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
-    company = $('#searchBar').val()
-    var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
-
-
-    // console.log(company)
-
-
-    // console.log (stockAPIURL)
     fetch(stockAPIURL)
     .then (function(response) {
         return response.json()
     })
     .then (function(data) {
         var stockData = []
-        // console.log(data)
         for (var keys in data['Time Series (60min)']) {
             data['Time Series (60min)'][keys].time = keys
             stockData.push(data['Time Series (60min)'][keys])
@@ -122,9 +115,9 @@ function fetchStocks() {
         
         console.log(stockOpen)
         console.log(stockClose)
+        $("#searchBar").val("")
     })
 }
-
 
 var companySearches = []
 function searchNews() {
@@ -140,27 +133,20 @@ function searchNews() {
                 .attr("class", "recentSearch")
                 .text(company)
         )
-        // $("#searchBar").val("")
         // console.log(companySearches)
         // console.log(company)
     }
 }
 
-
 const labels = [
-    
-    // If we want to change the values of the x-axis
 ];
 
 var dates = future
-for ( var i = 30; i > 0; i--) {
+for ( var i = 22; i > 0; i--) {
     var future = new Date();
     future.setDate(future.getDate() - i)
-    // console.log(future)
     labels.push(future.toLocaleDateString())
     }
-    
-
 
 const data = {
     labels: labels,
@@ -174,7 +160,6 @@ const data = {
     // y-axis will reflect to show a range starting a little below the first value and ending a little above the highest value
     }]
 };
-// console.log(data);
 
 
 const config = {
@@ -193,7 +178,6 @@ const config = {
                         }
                         // if we want to add any text to the tooltips enter here or we can delete if nothing needs to be added.
                     }
-                    
                 }
             }
         }
@@ -201,10 +185,7 @@ const config = {
 };
 
 function changeData(openValue) {
-    // openVAlue[i].stockOpen ==> [140.04, 104.96, ...]
-    // empty data array first to have a fresh chart, then push the stockopen value into the data array
     stockFigure.data.datasets[0].data = [];
-
     for (var i = 0; i < openValue.length; i++) {
     stockFigure.data.datasets[0].data.push(openValue[i].stockOpen)
     }
