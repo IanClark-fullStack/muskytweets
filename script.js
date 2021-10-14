@@ -120,10 +120,8 @@ function fetchStocks() {
         var setValley = $('#valley');
         setValley.text(stockValley);
         
-        console.log(stockOpenDate)
+        console.log(stockOpen)
         console.log(stockClose)
-    }).catch(function(error) {
-        // console.log(error)
     })
 }
 
@@ -187,8 +185,8 @@ const config = {
             tooltip: {
                 callbacks: {
                     afterBody: function() {
-                        for (var i=0; i<stockOpenDate.length; i++) {
-                            var open = stockOpenDate[i];
+                        for (var i=0; i<stockOpen.length; i++) {
+                            var open = stockOpen[i];
                             var close = stockClose[i];
                            
                             return `open: ${open.stockOpen} close: ${close.stockClose}`;
