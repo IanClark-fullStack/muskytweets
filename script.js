@@ -1,36 +1,37 @@
 
 var pastTime;
-// get more refined searches when company's ticker is searched
-// var company;
-// var newsType;
-// fetch call function from inputs 
-// var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=2021-9-15&to=2021-10-11&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
-// fetchNews grabs news for specific search
 var $form = $("#form")
-var company = $("#searchBar")
+var company = $("#searchBar").val()
 var newsType = "everything"
+var today = new Date();
+var lastMonth = yyyy+"-"+mm-1+"-"+dd;
+var dd = today.getDate();
+var mm = today.getMonth()+1;
+var yyyy = today.getFullYear();
+
 function fetchNews(event) {
     event.preventDefault()
     // Create ISO Time 
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1;
-    var yyyy = today.getFullYear();
     if(dd<10) {dd='0'+dd;}
     if (mm<10){mm='0'+mm;}
     today=yyyy+"-"+mm+"-"+dd+"-";
-    var lastMonth = yyyy+"-"+mm-1+"-"+dd;
+    // newsType = "everything"
+    company = $("#searchBar").val()
+    populateNews(company)
+}
+function populateNews(company) {
     var newsFeed = []
-    // var newsType = "everything"
-    // var company = $("#searchBar").val()
-    searchNews()
+    $('#news-container').empty()
+     searchNews()
     var newsAPIURL = `https://newsapi.org/v2/${newsType}?q=${company}&from=${today}&to=${lastMonth}&sortBy=popularity&apiKey=9b854ba91e734d3ca1e59cd723393af2`
+    console.log(newsAPIURL)
     fetch(newsAPIURL)
     .then (function(response) {
         return response.json()
     })
     // function to loop through data and pull information
     .then(function(data) {
+        console.log(data)
         var newsArticles = data.articles
         console.log(newsArticles)
         for (var i = 0; i < newsArticles.length; i++) {
@@ -56,20 +57,21 @@ function fetchNews(event) {
     })
 }
 
+
 function fetchStocks() {
-    // var company = $('#searchBar').val()
+    company = $('#searchBar').val()
     var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
 
-    console.log(company)
+    // console.log(company)
 
-    console.log (stockAPIURL)
+    // console.log (stockAPIURL)
     fetch(stockAPIURL)
     .then (function(response) {
         return response.json()
     })
     .then (function(data) {
         var stockData = []
-        console.log(data)
+        // console.log(data)
         for (var keys in data['Time Series (60min)']) {
             data['Time Series (60min)'][keys].time = keys
             stockData.push(data['Time Series (60min)'][keys])
@@ -91,14 +93,14 @@ function fetchStocks() {
         console.log(stockOpenDate)
         console.log(stockClose)
     }).catch(function(error) {
-        console.log(error)
+        // console.log(error)
     })
 }
 
 
 var companySearches = []
 function searchNews() {
-    // var company = $("#searchBar").val()
+    company = $("#searchBar").val()
     company.trim()
     var companyHistory = $("#stock-options")
     if (company.length > 0 && companySearches.indexOf(company) === -1) {
@@ -110,9 +112,9 @@ function searchNews() {
                 .attr("class", "recentSearch")
                 .text(company)
         )
-        $("#searchBar").val("")
-        console.log(companySearches)
-        console.log(company)
+        // $("#searchBar").val("")
+        // console.log(companySearches)
+        // console.log(company)
     }
 }
 
@@ -129,7 +131,7 @@ var dates = future
 for ( var i = 30; i > 0; i--) {
     var future = new Date();
     future.setDate(future.getDate() - i)
-    console.log(future)
+    // console.log(future)
     labels.push(future.toLocaleDateString())
     }
     
@@ -147,7 +149,7 @@ const data = {
     // y-axis will reflect to show a range starting a little below the first value and ending a little above the highest value
     }]
 };
-console.log(data);
+// console.log(data);
 
 const config = {
     type: 'line',
@@ -175,6 +177,18 @@ var stockFigure = new Chart(
     document.getElementById('stockFigure'),
     config
 );
+
+function init() {
+    company = "tsla"
+    newsType = "top_headlines"
+    // adjust parameters before function call
+    populateNews(company)
+    // fetchStock with the company part set to SPY
+    // localStorage.get to pull recent searches and put them as options
+}
+
+
+// init()
 
 $form.on("submit", fetchStocks)
 $form.on("submit", fetchNews)
