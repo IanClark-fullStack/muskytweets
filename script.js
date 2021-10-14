@@ -206,7 +206,13 @@ const config = {
         }
     }
 };
-
+var open;
+var populateData = function() {
+    for (var i=0; i<stockOpenDate.length; i++) {
+        open = stockOpenDate[i].stockOpen;
+        return open;
+    }
+}
 var stockFigure = new Chart(
     document.getElementById('stockFigure'),
     config
