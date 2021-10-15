@@ -1,4 +1,4 @@
-$(document).ready(function() {
+// $(document).ready(function() {
 
 // var pastTime;
 var $form = $("#form")
@@ -9,6 +9,10 @@ var today = new Date();
 var dd = today.getDate();
 var mm = today.getMonth()+1;
 var yyyy = today.getFullYear();
+var stockOpen = []
+var stockClose = []
+var highest = 0;
+var lowest = 0;
 var stockOpen = []
 var stockClose = []
 
@@ -65,13 +69,9 @@ function populateNews(company) {
     })
 }
 
-var highest = 0;
-var lowest = 0;
-var stockOpen = []
-var stockClose = []
 
-function fetchStocks(companyname) {
-    var company = $('#searchBar').val()
+function fetchStocks(company) {
+    // var company = $('#searchBar').val()
     var stockAPIURL= `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&apikey=CNK6ZW6SKIWY6TEE&symbol=${company}&interval=60min&outputsize=full`
     console.log(stockAPIURL)
     stockOpen = []
@@ -82,6 +82,7 @@ function fetchStocks(companyname) {
     })
     .then (function(data) {
         var stockData = []
+        console.log(data);
         for (var keys in data["Time Series (60min)"]) {
             data["Time Series (60min)"][keys].time = keys
             stockData.push(data["Time Series (60min)"][keys])
@@ -89,12 +90,9 @@ function fetchStocks(companyname) {
 
         for (let i = 15; i < 352; i += 16) {
             var stock = {}
-
+            console.log(stockData[i]);
             stock.stockOpen = stockData[i]["1. open"]
-
-            stock.stockDate = stockData[i]['time']
-
-
+            stock.stockDate = stockData[i]["time"]
             stockOpen.push(stock)
         }
         for (let i = 0; i < 352; i += 16) {
@@ -132,7 +130,7 @@ function fetchStocks(companyname) {
     })
 }
 
-var companySearches = []
+var companySearches = [] // global
 var companyHistory = $("#stock-options")
 function searchNews() {
     company = $("#searchBar").val()
@@ -154,47 +152,35 @@ function searchNews() {
 
 
 const labels = [
-];
+]; // global 
 
 
-const oldArray = [];
+const oldArray = []; // global
 
-for ( var i = 30; i > 0; i--) {
-    var future = new Date();
-    future.setDate(future.getDate() - i)
-    oldArray.push(future.toLocaleDateString())
-    }
-    var weekendDay = [];
+
+    var weekendDay = []; // global
+
     function excludeDays() {
+        for ( var i = 30; i > 0; i--) { // change to function
+            var future = new Date();
+            future.setDate(future.getDate() - i)
+            oldArray.push(future.toLocaleDateString())
+        }
         // var dates = future
         for (var i=0; i<oldArray.length; i++) {
-           var day = oldArray[i];
+            var day = oldArray[i];
             var dt = new Date(day);
         
-           if (dt.getDay() == 0 || dt.getDay() == 6) {
-               weekendDay.push(day);
-           }
-           else {
-           labels.push(day);
-           }
-            console.log(labels);
-            
-            // future.setDate(future.getDate() - i)
-            // console.log(future)
-            // if (future.getDay() == 0 || future.getDay() == 6) {
-            //     labels.push(future.toLocaleDateString())
-            // }
+            if (dt.getDay() == 0 || dt.getDay() == 6) {
+                weekendDay.push(day);
+            } else {
+            labels.push(day);
+            }
         }
     }
 excludeDays();    
 
-var dates = future
-for ( let i = 22; i > 0; i--) {
-    var future = new Date();
-    future.setDate(future.getDate() - i)
-    labels.push(future.toLocaleDateString())
-    }
-
+// var dates = future // global
 
 const data = {
     labels: labels,
@@ -218,27 +204,14 @@ const config = {
             tooltip: {
                 callbacks: {
                     afterBody: function() {
-
-                                return `open:`;
-
-                        // if we want to add any text to the tooltips enter here or we can delete if nothing needs to be added.
-                    
-                    
-
-                        for (var i=0; i<stockOpen.length; i++) {
-                            var open = stockOpen[i];
-                            var close = stockClose[i];
-                            console.log(open);
-                            return `open: ${open.stockOpen} close: ${close.stockClose}`;
-                        }
-                        // if we want to add any text to the tooltips enter here or we can delete if nothing needs to be added.
-
+                                return 'hi';
                     }
                 }
             }
         }
     }
 }
+
 
 function changeData(openValue) {
     stockFigure.data.datasets[0].data = [];
@@ -256,13 +229,14 @@ var stockFigure = new Chart(
 function init() {
     var savedChar = JSON.parse(localStorage.getItem("company")) || []
     if (savedChar) {
-        for (var i = 0; i < savedChar.length; i++)
+        for (var i = 0; i < savedChar.length; i++) {
             companyHistory.append(
                 $("<option>")
                     .addClass()
                     .attr("class", "recentSearch")
                     .text(savedChar[i])
             )
+        }
     }
 }
 
@@ -282,7 +256,7 @@ $("#stock-options").on("change", function (event) {
     fetchStocks(company)
 })
 
-})
+
 
 
 // init()
@@ -290,3 +264,5 @@ $("#stock-options").on("change", function (event) {
 $form.on("submit", fetchStocks)
 $form.on("submit", fetchNews)
 
+
+// })
